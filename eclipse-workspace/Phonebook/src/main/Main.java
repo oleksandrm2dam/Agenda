@@ -33,6 +33,7 @@ public class Main {
 				case "4":
 					break;
 				case "5":
+					PhonebookUtil.writePhonebook(phonebook);
 					System.out.println("GOODBYE!");
 					break;
 				default:

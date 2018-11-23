@@ -1,9 +1,11 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Phonebook {
+public class Phonebook implements Serializable {
 	
+	private static final long serialVersionUID = -8424820299914478473L;
 	private ArrayList<Contact> contacts;
 
 	// START Constructors

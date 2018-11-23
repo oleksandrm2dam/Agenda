@@ -1,0 +1,30 @@
+package util;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import entities.Phonebook;
+
+public class PhonebookUtil {
+	
+	private static String phonebookPath = "/files/phonebook.pb";
+	
+	public static Phonebook readPhonebook() {
+		return new Phonebook();
+	}
+	
+	public static void writePhonebook(Phonebook phonebook) {
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		try {
+			fos = new FileOutputStream(phonebookPath);
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(phonebook);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}
