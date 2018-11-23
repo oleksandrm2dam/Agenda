@@ -1,0 +1,11 @@
+package util;
+
+import entities.Phonebook;
+
+public class PhonebookUtil {
+	
+	public static Phonebook readPhonebook() {
+		
+	}
+	
+}
