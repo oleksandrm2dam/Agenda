@@ -1,0 +1,212 @@
+package util;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
+import entities.Contact;
+import entities.Phonebook;
+
+public class PhonebookUtil {
+	
+	// This class is in charge of writing and reading phonebooks to/from disk
+	
+	// START Export methods
+	public static void exportToBin(Phonebook phonebook, File phonebookFile) {
+		/**
+		 *	0 = Field is null
+		 *	Any other number = The number of elements in the ArrayList
+		 */
+		FileOutputStream fos;
+		DataOutputStream dos = null;
+		
+		try {
+			fos = new FileOutputStream(phonebookFile);
+			dos = new DataOutputStream(fos);
+			
+			// Number of contacts to be written
+			dos.writeInt(phonebook.getContacts().size());
+			
+			for(Contact currentContact : phonebook.getContacts()) {
+				// Write name and last name
+				dos.writeUTF(currentContact.getName());
+				dos.writeUTF(currentContact.getLastName());
+				
+				// Write alias
+				if(currentContact.getAlias() == null) {
+					dos.writeInt(0);
+				} else {
+					dos.writeInt(1);
+					dos.writeUTF(currentContact.getAlias());
+				}
+				
+				// Write emails
+				if(currentContact.getEmail() == null || currentContact.getEmail().size() == 0) {
+					dos.writeInt(0);
+				} else {
+					dos.writeInt(currentContact.getEmail().size());
+					for(String currentEmail : currentContact.getEmail()) {
+						dos.writeUTF(currentEmail);
+					}
+				}
+				
+				// Write address
+				if(currentContact.getAddress() == null) {
+					dos.writeInt(0);
+				} else {
+					dos.writeInt(1);
+					dos.writeUTF(currentContact.getAddress());
+				}
+				
+				// Write landline phone number
+				if(currentContact.getLandlinePhoneNumber() == null) {
+					dos.writeInt(0);
+				} else {
+					dos.writeInt(1);
+					dos.writeUTF(currentContact.getLandlinePhoneNumber() );
+				}
+				
+				// Write mobile phone numbers
+				if(currentContact.getPhoneNumber() == null || currentContact.getPhoneNumber().size() == 0) {
+					dos.writeInt(0);
+				} else {
+					dos.writeInt(currentContact.getPhoneNumber().size());
+					for(String currentPhoneNumber : currentContact.getPhoneNumber()) {
+						dos.writeUTF(currentPhoneNumber);
+					}
+				}
+				
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(dos != null) {
+					dos.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void exportToTxt(Phonebook phonebook, File phonebookFile) {
+		
+	}
+	
+	public static void exportToXml(Phonebook phonebook, File phonebookFile) {
+		
+	}
+	// END Export methods
+	
+	// START Import methods
+	public static Phonebook importFromBin(File phonebookFile) {
+		FileInputStream fis;
+		DataInputStream dis = null;
+		
+		try {
+			fis = new FileInputStream(phonebookFile);
+			dis = new DataInputStream(fis);
+			
+			Phonebook phonebook = new Phonebook();
+			
+			String name;
+			String lastName;
+			String alias;
+			ArrayList<String> email = new ArrayList<String>();
+			String address;
+			String landlinePhoneNumber;
+			ArrayList<String> phoneNumber = new ArrayList<String>();
+			
+			int numContacts = dis.readInt();
+			for(int i = 0; i < numContacts; ++i) {
+				// Read name and last name
+				name = dis.readUTF();
+				lastName = dis.readUTF();
+				
+				// Read alias
+				if(dis.readInt() == 0) {
+					alias = null;
+				} else {
+					alias = dis.readUTF();
+				}
+				
+				// Read emails
+				int numEmails = dis.readInt();
+				if(numEmails == 0) {
+					email = null;
+				} else {
+					for(int j = 0; j < numEmails; ++j) {
+						email.add(dis.readUTF());
+					}
+				}
+				
+				// Read address
+				if(dis.readInt() == 0) {
+					address = null;
+				} else {
+					address = dis.readUTF();
+				}
+				
+				// Read landline phone number
+				if(dis.readInt() == 0) {
+					landlinePhoneNumber = null;
+				} else {
+					landlinePhoneNumber = dis.readUTF();
+				}
+				
+				// Read mobile phone numbers
+				int numPhones = dis.readInt();
+				if(numPhones == 0) {
+					phoneNumber = null;
+				} else {
+					for(int j = 0; j < numPhones; ++j) {
+						phoneNumber.add(dis.readUTF());
+					}
+				}
+				
+				// New contact with current attributes
+				Contact newContact = new Contact(
+						name,
+						lastName,
+						alias,
+						email,
+						address,
+						landlinePhoneNumber,
+						phoneNumber
+						);
+				// Add new contact to the phonebook
+				phonebook.getContacts().add(newContact);
+			}
+			return phonebook;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(dis != null) {
+					dis.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	public static Phonebook importFromTxt(File phonebookFile) {
+		return null;
+	}
+	
+	public static Phonebook importFromXml(File phonebookFile) {
+		return null;
+	}
+	// END Import methods
+}

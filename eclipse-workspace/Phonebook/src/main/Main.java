@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,12 +10,20 @@ import util.PhonebookUtil;
 
 public class Main {
 	
-	private static Phonebook phonebook;
 	private static Scanner scanner;
+	private static String executionPath;
+	private static File phonebookDefaultFile;
+	private static Phonebook phonebook;
 	
 	public static void main(String[] args) {
-		phonebook = PhonebookUtil.readPhonebook(); // Load a phonebook from disk
 		scanner = new Scanner(System.in);
+		executionPath = System.getProperty("user.dir").replace("\\", "/");
+		phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
+		phonebook = PhonebookUtil.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
+		
+		if(phonebook == null) {
+			phonebook = new Phonebook();
+		}
 		
 		String mainMenuAnsw;
 		do {
@@ -29,11 +38,13 @@ public class Main {
 					searchForContactMenu();
 					break;
 				case "3":
+					exportPhonebookMenu();
 					break;
 				case "4":
 					break;
 				case "5":
-					PhonebookUtil.writePhonebook(phonebook);
+					// Before exiting, the phonebook gets saved to disk
+					PhonebookUtil.exportToBin(phonebook, phonebookDefaultFile);
 					System.out.println("GOODBYE!");
 					break;
 				default:
@@ -244,8 +255,8 @@ public class Main {
 					break;
 				case "4":
 					int numEmails = contact.getEmail().size();
-					if(numEmails <= 1) {
-						// If there are one or none email addresses
+					if(numEmails == 0) {
+						// If there are no email addresses
 						contact.setEmail(new ArrayList<String>());
 						System.out.println("New email: ");
 						contact.getEmail().add(scanner.nextLine());
@@ -255,14 +266,21 @@ public class Main {
 						for(int i = 0; i < numEmails; ++i) {
 							System.out.println((i + 1) + " " + contact.getEmail().get(i));
 						}
+						System.out.println((numEmails + 1) + " Add new email.");
 						try {
 							int selectedEmailIndex = Integer.parseInt(scanner.nextLine()) - 1;
-							if(selectedEmailIndex < 0 || selectedEmailIndex >= numEmails) {
+							if(selectedEmailIndex < 0 || selectedEmailIndex > numEmails) {
 								System.out.println("Invalid email index.");
 							} else {
-								// Edit the selected email
-								System.out.println("New email: ");
-								contact.getEmail().set(selectedEmailIndex, scanner.nextLine());
+								if(selectedEmailIndex == numEmails) {
+									// Add new email
+									System.out.println("New email: ");
+									contact.getEmail().add(scanner.nextLine());
+								} else {
+									// Edit the selected email
+									System.out.println("New email: ");
+									contact.getEmail().set(selectedEmailIndex, scanner.nextLine());
+								}
 							}
 						} catch (NumberFormatException e) {
 							System.out.println("Invalid email index.");
@@ -279,8 +297,8 @@ public class Main {
 					break;
 				case "7":
 					int numPhones = contact.getPhoneNumber().size();
-					if(numPhones <= 1) {
-						// If there are one or none phone numbers
+					if(numPhones == 0) {
+						// If there are no phone numbers
 						contact.setPhoneNumber(new ArrayList<String>());
 						System.out.println("New mobile phone number: ");
 						contact.getPhoneNumber().add(scanner.nextLine());
@@ -290,14 +308,21 @@ public class Main {
 						for(int i = 0; i < numPhones; ++i) {
 							System.out.println((i + 1) + " " + contact.getPhoneNumber().get(i));
 						}
+						System.out.println((numPhones + 1) + " Add new phone number.");
 						try {
 							int selectedPhoneIndex = Integer.parseInt(scanner.nextLine()) - 1;
-							if(selectedPhoneIndex < 0 || selectedPhoneIndex >= numPhones) {
+							if(selectedPhoneIndex < 0 || selectedPhoneIndex > numPhones) {
 								System.out.println("Invalid mobile phone number index.");
 							} else {
-								// Edit the selected phone number
-								System.out.println("New mobile phone number: ");
-								contact.getPhoneNumber().set(selectedPhoneIndex, scanner.nextLine());
+								if(selectedPhoneIndex == numPhones) {
+									// Add new phone number
+									System.out.println("New mobile phone number: ");
+									contact.getPhoneNumber().add(scanner.nextLine());
+								} else {
+									// Edit the selected phone number
+									System.out.println("New mobile phone number: ");
+									contact.getPhoneNumber().set(selectedPhoneIndex, scanner.nextLine());
+								}
 							}
 						} catch (NumberFormatException e) {
 							System.out.println("Invalid mobile phone number index.");
@@ -312,6 +337,49 @@ public class Main {
 			System.out.println("Keep editing the contact? (Y/n): ");
 			choice = scanner.nextLine();
 		} while (!choice.equals("n") && !choice.equals("N"));
+	}
+	
+	private static void exportPhonebookMenu() {
+		System.out.println("Folder: ");
+		String dir = scanner.nextLine();
+		
+		System.out.println("File name: ");
+		String fileName = scanner.nextLine();
+		
+		String fileExtension;
+		do {
+			System.out.println("File type (.txt, .bin, .xml): ");
+			fileExtension = scanner.nextLine();
+			File phonebookFile = new File(dir, fileName + fileExtension);
+			
+			if(phonebookFile.exists()) {
+				System.out.println("File already exists, override? (Y/n): ");
+				String override = scanner.nextLine();
+				if(override.equals("n") || override.equals("N")) {
+					System.out.println("Export cancelled.");
+					return;
+				}
+			}
+			
+			switch(fileExtension) {
+				case ".txt":
+					PhonebookUtil.exportToTxt(phonebook, phonebookFile);
+					break;
+				case ".bin":
+					PhonebookUtil.exportToBin(phonebook, phonebookFile);
+					break;
+				case ".xml":
+					PhonebookUtil.exportToXml(phonebook, phonebookFile);
+					break;
+				default:
+					System.out.println("File type not valid.");
+					break;
+			}
+		} while (!fileExtension.equals(".txt") && !fileExtension.equals(".bin") && !fileExtension.equals(".xml"));
+	}
+	
+	private static void importPhonebookMenu() {
+		
 	}
 
 }
