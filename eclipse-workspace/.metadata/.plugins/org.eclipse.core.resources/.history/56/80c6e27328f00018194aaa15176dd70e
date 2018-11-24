@@ -70,6 +70,7 @@ public class Phonebook implements Serializable {
 					foundContacts.add(currentContact);
 				}
 			}
+			
 		}
 		
 		return foundContacts;

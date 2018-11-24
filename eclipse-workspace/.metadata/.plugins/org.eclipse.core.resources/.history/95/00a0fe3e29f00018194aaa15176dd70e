@@ -146,7 +146,7 @@ public class Main {
 	private static void searchForContactMenu() {
 		ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 		
-		System.out.println("Search by (1) name, (2) last name, (3) alias, (4) show all contacts: ");
+		System.out.println("Search by (1) name, (2) last name, (3) alias: ");
 		String searchBy = scanner.nextLine();
 		
 		switch(searchBy) {
@@ -165,9 +165,6 @@ public class Main {
 				String alias = scanner.nextLine();
 				foundContacts = phonebook.searchByAlias(alias);
 				break;
-			case "4":
-				foundContacts = phonebook.getContacts();
-				break;	
 			default:
 				System.out.println("Not valid.");
 				return;

@@ -166,7 +166,9 @@ public class Main {
 				foundContacts = phonebook.searchByAlias(alias);
 				break;
 			case "4":
-				foundContacts = phonebook.getContacts();
+				System.out.println("Alias: ");
+				String alias = scanner.nextLine();
+				foundContacts = phonebook.searchByAlias(alias);
 				break;	
 			default:
 				System.out.println("Not valid.");

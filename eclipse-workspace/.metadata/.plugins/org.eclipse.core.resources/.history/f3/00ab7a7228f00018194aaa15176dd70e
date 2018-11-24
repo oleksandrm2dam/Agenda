@@ -65,10 +65,8 @@ public class Phonebook implements Serializable {
 		wantedAlias = wantedAlias.toLowerCase();
 		
 		for(Contact currentContact : contacts) {
-			if(currentContact.getAlias() != null) {
-				if(currentContact.getAlias().toLowerCase().equals(wantedAlias)) {
-					foundContacts.add(currentContact);
-				}
+			if(currentContact.getAlias().toLowerCase().equals(wantedAlias)) {
+				foundContacts.add(currentContact);
 			}
 		}
 		
