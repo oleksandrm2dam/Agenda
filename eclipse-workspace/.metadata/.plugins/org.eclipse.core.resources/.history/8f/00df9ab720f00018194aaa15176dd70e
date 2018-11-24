@@ -1,0 +1,44 @@
+package util;
+
+import org.xml.sax.helpers.DefaultHandler;
+
+import entities.Phonebook;
+
+public class SAXHandler extends DefaultHandler {
+	
+	private Phonebook newPhonebook
+	private String value;
+	private Persona persona;
+	
+	public MyHandler(ArrayList<Persona> list) {
+		this.list = list;
+	}
+	
+	@Override  
+	public void startElement(String uri, String localName, String name, Attributes attributes) throws SAXException {  
+		if(localName.equals("persona")) {
+			persona = new Persona();
+		}
+	}
+		     
+	@Override  
+	public void characters(char[] ch, int start, int length) throws SAXException {   
+		value = new String(ch, start, length);
+	}
+		  
+	@Override  
+	public void endElement(String uri, String localName, String name) throws SAXException {  
+		switch (localName) {
+			case "persona":
+				list.add(persona);
+				break;
+			case "nombre":
+				persona.setNombre(value);
+				break;
+			case "edad":
+				persona.setEdad(Integer.parseInt(value));
+				break;
+		}
+	}
+	
+}

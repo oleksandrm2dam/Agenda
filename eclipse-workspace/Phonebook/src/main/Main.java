@@ -19,8 +19,8 @@ public class Main {
 		scanner = new Scanner(System.in);
 		executionPath = System.getProperty("user.dir").replace("\\", "/");
 		phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
-		phonebook = PhonebookUtil.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
 		
+		phonebook = PhonebookUtil.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
 		if(phonebook == null) {
 			phonebook = new Phonebook();
 		}
@@ -41,6 +41,7 @@ public class Main {
 					exportPhonebookMenu();
 					break;
 				case "4":
+					importPhonebookMenu();
 					break;
 				case "5":
 					// Before exiting, the phonebook gets saved to disk
@@ -343,12 +344,12 @@ public class Main {
 		System.out.println("Folder: ");
 		String dir = scanner.nextLine();
 		
-		System.out.println("File name: ");
+		System.out.println("File name (without extension): ");
 		String fileName = scanner.nextLine();
 		
 		String fileExtension;
 		do {
-			System.out.println("File type (.txt, .bin, .xml): ");
+			System.out.println("File extension (.txt, .bin, .xml): ");
 			fileExtension = scanner.nextLine();
 			File phonebookFile = new File(dir, fileName + fileExtension);
 			
@@ -372,14 +373,71 @@ public class Main {
 					PhonebookUtil.exportToXml(phonebook, phonebookFile);
 					break;
 				default:
-					System.out.println("File type not valid.");
+					System.out.println("Extension not valid.");
 					break;
 			}
 		} while (!fileExtension.equals(".txt") && !fileExtension.equals(".bin") && !fileExtension.equals(".xml"));
 	}
 	
 	private static void importPhonebookMenu() {
+		System.out.println("Warning: importing a phonebook will override the current one.");
+		System.out.println("Folder: ");
+		String dir = scanner.nextLine();
 		
+		String fileName;
+		String fileExtension = "";
+		do {
+			System.out.println("File name (with extension): ");
+			fileName = scanner.nextLine();
+			
+			// Get the extension
+			int lastDot = fileName.lastIndexOf('.');
+			if(lastDot > 0) {
+				fileExtension = fileName.substring(lastDot + 1);
+			}
+			
+			File phonebookFile = new File(dir, fileName);
+			
+			if(!phonebookFile.exists()) {
+				System.out.println("Given file does not exist.");
+				return;
+			}
+			
+			switch(fileExtension) {
+				case "txt":
+					Phonebook tempTxt = PhonebookUtil.importFromTxt(phonebookFile);
+					if(tempTxt != null) {
+						phonebook = tempTxt;
+					} else {
+						System.out.println("Imported file is null.");
+						return;
+					}
+					break;
+				case "bin":
+					Phonebook tempBin = PhonebookUtil.importFromBin(phonebookFile);
+					if(tempBin != null) {
+						phonebook = tempBin;
+					} else {
+						System.out.println("Imported file is null.");
+						return;
+					}
+					break;
+				case "xml":
+					Phonebook tempXml = PhonebookUtil.importFromXml(phonebookFile);
+					if(tempXml != null) {
+						phonebook = tempXml;
+					} else {
+						System.out.println("Imported file is null.");
+						return;
+					}
+					break;
+				default:
+					System.out.println("Extension not valid.");
+					break;
+			}
+			
+		} while (!fileExtension.equals("txt") && !fileExtension.equals("bin") && !fileExtension.equals("xml"));
+		System.out.println("Succesfully imported phonebook.");
 	}
 
 }

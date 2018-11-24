@@ -15,6 +15,10 @@ public class Contact implements Serializable {
 	private ArrayList<String> phoneNumber;	// Can be empty or unlimited
 	
 	// START Constructors
+	public Contact() {
+		
+	}
+	
 	public Contact(String name, String lastName) {
 		this.name = name;
 		this.lastName = lastName;
