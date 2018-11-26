@@ -25,7 +25,7 @@ public class SAXHandler extends DefaultHandler {
 			case "contact":
 				contact = new Contact();
 				break;
-			case "email":
+			case "emails":
 				contact.setEmail(new ArrayList<String>());
 				break;
 			case "phoneNumbers":
@@ -46,31 +46,38 @@ public class SAXHandler extends DefaultHandler {
 				phonebook.getContacts().add(contact);
 				break;
 			case "name":
-				contact.setName(value);
+				if(value != null)
+					contact.setName(value);
 				value = null;
 				break;
 			case "lastName":
-				contact.setLastName(value);
+				if(value != null)
+					contact.setLastName(value);
 				value = null; // Value is set to NULL in case the next element doesn't have a value
 				break;
 			case "alias":
-				contact.setAlias(value);
+				if(value != null)
+					contact.setAlias(value);
 				value = null; 
 				break;
 			case "email":
-				contact.getEmail().add(value);
+				if(value != null)
+					contact.getEmail().add(value);
 				value = null;
 				break;
 			case "address":
-				contact.setAddress(value);
+				if(value != null)
+					contact.setAddress(value);
 				value = null;
 				break;
 			case "landlinePhoneNumber":
-				contact.setLandlinePhoneNumber(value);
+				if(value != null)
+					contact.setLandlinePhoneNumber(value);
 				value = null;
 				break;
 			case "phoneNumber":
-				contact.getPhoneNumber().add(value);
+				if(value != null)
+					contact.getPhoneNumber().add(value);
 				value = null;
 				break;
 		}

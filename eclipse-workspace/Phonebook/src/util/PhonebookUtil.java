@@ -157,7 +157,7 @@ public class PhonebookUtil {
 				++cIndex;
 				
 				if(numEmails == 0) {
-					email = null;
+					email = new ArrayList<String>();
 				} else {
 					email = new ArrayList<String>();
 					for(int j = 0; j < numEmails; ++j) {
@@ -189,7 +189,7 @@ public class PhonebookUtil {
 				++cIndex;
 				
 				if(numPhones == 0) {
-					phoneNumber = null;
+					phoneNumber = new ArrayList<String>();
 				} else {
 					phoneNumber = new ArrayList<String>();
 					for(int j = 0; j < numPhones; ++j) {
@@ -343,7 +343,7 @@ public class PhonebookUtil {
 				// Read emails
 				int numEmails = dis.readInt();
 				if(numEmails == 0) {
-					email = null;
+					email = new ArrayList<String>();
 				} else {
 					email = new ArrayList<String>();
 					for(int j = 0; j < numEmails; ++j) {
@@ -368,7 +368,7 @@ public class PhonebookUtil {
 				// Read mobile phone numbers
 				int numPhones = dis.readInt();
 				if(numPhones == 0) {
-					phoneNumber = null;
+					phoneNumber = new ArrayList<String>();
 				} else {
 					phoneNumber = new ArrayList<String>();
 					for(int j = 0; j < numPhones; ++j) {
@@ -438,7 +438,7 @@ public class PhonebookUtil {
 				
 				// Write emails
 				Element emails = doc.createElement("emails");
-				if(currentContact.getEmail() != null) {
+				if(currentContact.getEmail() != null && currentContact.getEmail().size() != 0) {
 					for(String currentEmail : currentContact.getEmail()) {
 						Element email = doc.createElement("email");
 						email.appendChild(doc.createTextNode(currentEmail));
