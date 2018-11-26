@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 import entities.Contact;
 import entities.Phonebook;
-import util.PhonebookUtil;
 
 public class Main {
 	
@@ -20,10 +19,8 @@ public class Main {
 		executionPath = System.getProperty("user.dir").replace("\\", "/");
 		phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
 		
-		phonebook = PhonebookUtil.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
-		if(phonebook == null) {
-			phonebook = new Phonebook();
-		}
+		phonebook = new Phonebook();
+		phonebook.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
 		
 		String mainMenuAnsw;
 		do {
@@ -45,7 +42,7 @@ public class Main {
 					break;
 				case "5":
 					// Before exiting, the phonebook gets saved to disk
-					PhonebookUtil.exportToBin(phonebook, phonebookDefaultFile);
+					phonebook.exportToBin(phonebookDefaultFile);
 					System.out.println("GOODBYE!");
 					break;
 				default:
@@ -114,17 +111,11 @@ public class Main {
 		if(alias.length() == 0) {
 			alias = null;
 		}
-		if(email.size() == 0) {
-			email = null;
-		}
 		if(address.length() == 0) {
 			address = null;
 		}
 		if(landlinePhoneNumber.length() == 0) {
 			landlinePhoneNumber = null;
-		}
-		if(phoneNumber.size() == 0) {
-			phoneNumber = null;
 		}
 		
 		Contact newContact = new Contact(
@@ -140,7 +131,9 @@ public class Main {
 		System.out.println("Adding to phonebook: ");
 		System.out.println(newContact.toString());
 		
+		// Adds the new contact and saves the phonebook to disk
 		phonebook.getContacts().add(newContact);
+		phonebook.exportToBin(phonebookDefaultFile);
 	}
 	
 	private static void searchForContactMenu() {
@@ -192,7 +185,7 @@ public class Main {
 				// so accessing objects by index is not really inefficient.
 			}
 			try {
-				System.out.println("Choose the wanted contact by it's index: ");
+				System.out.println("Choose the wanted contact by index: ");
 				selectedContactIndex = Integer.parseInt(scanner.nextLine()) - 1; // (- 1) because the first found contact shows with index (1)
 				if(selectedContactIndex < 0 || selectedContactIndex >= numFoundContacts) {
 					System.out.println("Index not valid.");
@@ -224,6 +217,8 @@ public class Main {
 		if(choice.equals("Y") || choice.equals("y")) {
 			phonebook.getContacts().remove(contact);
 			System.out.println("Contact deleted successfully.");
+			// Saves the phonebook to disk
+			phonebook.exportToBin(phonebookDefaultFile);
 		} else {
 			System.out.println("Contact not deleted.");
 		}
@@ -341,6 +336,8 @@ public class Main {
 			System.out.println("Keep editing the contact? (Y/n): ");
 			choice = scanner.nextLine();
 		} while (!choice.equals("n") && !choice.equals("N"));
+		// Saves the phonebook to disk
+		phonebook.exportToBin(phonebookDefaultFile);
 	}
 	
 	private static void exportPhonebookMenu() {
@@ -367,13 +364,13 @@ public class Main {
 			
 			switch(fileExtension) {
 				case ".txt":
-					PhonebookUtil.exportToTxt(phonebook, phonebookFile);
+					phonebook.exportToTxt(phonebookFile);
 					break;
 				case ".bin":
-					PhonebookUtil.exportToBin(phonebook, phonebookFile);
+					phonebook.exportToBin(phonebookFile);
 					break;
 				case ".xml":
-					PhonebookUtil.exportToXml(phonebook, phonebookFile);
+					phonebook.exportToXml(phonebookFile);
 					break;
 				default:
 					System.out.println("Extension not valid.");
@@ -408,31 +405,13 @@ public class Main {
 			
 			switch(fileExtension) {
 				case "txt":
-					Phonebook tempTxt = PhonebookUtil.importFromTxt(phonebookFile);
-					if(tempTxt != null) {
-						phonebook = tempTxt;
-					} else {
-						System.out.println("Imported file is null.");
-						return;
-					}
+					phonebook.importFromTxt(phonebookFile); 
 					break;
 				case "bin":
-					Phonebook tempBin = PhonebookUtil.importFromBin(phonebookFile);
-					if(tempBin != null) {
-						phonebook = tempBin;
-					} else {
-						System.out.println("Imported file is null.");
-						return;
-					}
+					phonebook.importFromBin(phonebookFile); 
 					break;
 				case "xml":
-					Phonebook tempXml = PhonebookUtil.importFromXml(phonebookFile);
-					if(tempXml != null) {
-						phonebook = tempXml;
-					} else {
-						System.out.println("Imported file is null.");
-						return;
-					}
+					phonebook.importFromXml(phonebookFile); 
 					break;
 				default:
 					System.out.println("Extension not valid.");
