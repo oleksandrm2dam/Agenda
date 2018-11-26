@@ -51,27 +51,21 @@ public class SAXHandler extends DefaultHandler {
 				break;
 			case "lastName":
 				contact.setLastName(value);
-				value = null; // Value is set to NULL in case the next element doesn't have a value
 				break;
 			case "alias":
 				contact.setAlias(value);
-				value = null; 
 				break;
 			case "email":
 				contact.getEmail().add(value);
-				value = null;
 				break;
 			case "address":
 				contact.setAddress(value);
-				value = null;
 				break;
 			case "landlinePhoneNumber":
 				contact.setLandlinePhoneNumber(value);
-				value = null;
 				break;
 			case "phoneNumber":
 				contact.getPhoneNumber().add(value);
-				value = null;
 				break;
 		}
 	}
