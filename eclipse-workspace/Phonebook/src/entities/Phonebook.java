@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,6 +25,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import util.SAXHandler;
 
@@ -195,7 +199,7 @@ public class Phonebook implements Serializable {
 			String landlinePhoneNumber;
 			ArrayList<String> phoneNumber;
 			
-			int cIndex = 0; // User to keep track of which value from values[] is currently selected
+			int cIndex = 0; // Used to keep track of which value from values[] is currently selected
 			int numContacts = Integer.parseInt(values[cIndex]);
 			++cIndex;
 			
@@ -560,4 +564,26 @@ public class Phonebook implements Serializable {
 		}
 	}
 	// END XML Export/Import
+	
+	// START XML XStream Export/Import
+	public void exportToXmlXstream(File phonebookFile) {
+		XStream xstream = new XStream(new DomDriver());
+		
+		try {
+			xstream.alias("contact", Contact.class);
+			xstream.toXML(this.getContacts().get(0), new FileOutputStream(phonebookFile));
+			
+			Contact newContact = (Contact) xstream.fromXML(new FileInputStream(phonebookFile));
+			System.out.println(newContact.toString());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void importFromXmlXstream(File phonebookFile) {
+		
+	}
+	// END XML XStream Export/Import
 }

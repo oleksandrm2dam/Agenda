@@ -9,9 +9,9 @@ import entities.Phonebook;
 
 public class Main {
 	
-	private static Scanner scanner;
-	private static String executionPath;
-	private static File phonebookDefaultFile;
+	private static Scanner scanner; // Only used for user input
+	private static String executionPath; // Directory in which the internal phonebook is stored
+	private static File phonebookDefaultFile; // File where the internal phonebook is stored
 	private static Phonebook phonebook;
 	
 	public static void main(String[] args) {
@@ -22,6 +22,7 @@ public class Main {
 		phonebook = new Phonebook();
 		phonebook.importFromBin(phonebookDefaultFile); // Load a phonebook from disk
 		
+		phonebook.exportToXmlXstream(new File(""));
 		String mainMenuAnsw;
 		do {
 			mainMenu();
@@ -65,6 +66,7 @@ public class Main {
 	}
 	
 	private static void addContactMenu() {
+		// START User input
 		String name;
 		String lastName;
 		String alias;
@@ -106,6 +108,7 @@ public class Main {
 			System.out.println("Add another mobile phone number? (Y/n): ");
 			another = scanner.nextLine();
 		} while (!another.equals("n") && !another.equals("N"));
+		// END User input
 		
 		// if empty, then the value is null
 		if(alias.length() == 0) {
@@ -159,6 +162,7 @@ public class Main {
 				foundContacts = phonebook.searchByAlias(alias);
 				break;
 			case "4":
+				// 	All contacts in the phonebook
 				foundContacts = phonebook.getContacts();
 				break;	
 			default:
@@ -168,16 +172,19 @@ public class Main {
 		
 		int numFoundContacts = foundContacts.size();
 		if(numFoundContacts == 0) {
+			// If there are no matching contacts
 			System.out.println("Matching contacts not found.");
 			return;
 		}
 		
 		int selectedContactIndex;
 		if(numFoundContacts == 1) {
+			// If there is only one matching contact
 			selectedContactIndex = 0; // Index 0
 			System.out.println("Printing found contact: ");
-			System.out.println(foundContacts.get(0));
+			System.out.println(foundContacts.get(0).toString());
 		} else {
+			// If there are multiple matching contacts
 			System.out.println("Printing found contacts: ");
 			for(int i = 0; i < numFoundContacts; ++i) {
 				System.out.println((i + 1) + " " + foundContacts.get(i).toString());
@@ -215,10 +222,10 @@ public class Main {
 		String choice = scanner.nextLine();
 		
 		if(choice.equals("Y") || choice.equals("y")) {
+			// Deletes the contact and saves the phonebook to disk
 			phonebook.getContacts().remove(contact);
-			System.out.println("Contact deleted successfully.");
-			// Saves the phonebook to disk
 			phonebook.exportToBin(phonebookDefaultFile);
+			System.out.println("Contact deleted successfully.");
 		} else {
 			System.out.println("Contact not deleted.");
 		}
@@ -253,6 +260,7 @@ public class Main {
 					contact.setAlias(scanner.nextLine());
 					break;
 				case "4":
+					// Edit the email/emails
 					int numEmails = contact.getEmail().size();
 					if(numEmails == 0) {
 						// If there are no email addresses
@@ -260,7 +268,7 @@ public class Main {
 						System.out.println("New email: ");
 						contact.getEmail().add(scanner.nextLine());
 					} else {
-						// If there are multiple email addresses
+						// If there are one or more email addresses
 						System.out.println("Choose the email to modify: ");
 						for(int i = 0; i < numEmails; ++i) {
 							System.out.println((i + 1) + " " + contact.getEmail().get(i));
@@ -295,6 +303,7 @@ public class Main {
 					contact.setLandlinePhoneNumber(scanner.nextLine());
 					break;
 				case "7":
+					// Edit phone number/phone numbers
 					int numPhones = contact.getPhoneNumber().size();
 					if(numPhones == 0) {
 						// If there are no phone numbers
@@ -302,7 +311,7 @@ public class Main {
 						System.out.println("New mobile phone number: ");
 						contact.getPhoneNumber().add(scanner.nextLine());
 					} else {
-						// If there are multiple phone numbers
+						// If there are one or more mobile phone numbers
 						System.out.println("Choose the mobile phone number to modify: ");
 						for(int i = 0; i < numPhones; ++i) {
 							System.out.println((i + 1) + " " + contact.getPhoneNumber().get(i));
@@ -336,7 +345,7 @@ public class Main {
 			System.out.println("Keep editing the contact? (Y/n): ");
 			choice = scanner.nextLine();
 		} while (!choice.equals("n") && !choice.equals("N"));
-		// Saves the phonebook to disk
+		// Once all editing is done, saves the phonebook to disk
 		phonebook.exportToBin(phonebookDefaultFile);
 	}
 	
@@ -344,14 +353,13 @@ public class Main {
 		System.out.println("Folder: ");
 		String dir = scanner.nextLine();
 		
-		System.out.println("File name (without extension): ");
-		String fileName = scanner.nextLine();
 		
-		String fileExtension;
+		String fileName;
+		String fileExtension = "";
 		do {
-			System.out.println("File extension (.txt, .bin, .xml): ");
-			fileExtension = scanner.nextLine();
-			File phonebookFile = new File(dir, fileName + fileExtension);
+			System.out.println("File name (can be .txt, .bin, .xml): ");
+			fileName = scanner.nextLine();
+			File phonebookFile = new File(dir, fileName);
 			
 			if(phonebookFile.exists()) {
 				System.out.println("File already exists, override? (Y/n): ");
@@ -362,21 +370,27 @@ public class Main {
 				}
 			}
 			
+			// Get the extension
+			int lastDot = fileName.lastIndexOf('.');
+			if(lastDot > 0) {
+				fileExtension = fileName.substring(lastDot + 1);
+			}
+						
 			switch(fileExtension) {
-				case ".txt":
+				case "txt":
 					phonebook.exportToTxt(phonebookFile);
 					break;
-				case ".bin":
+				case "bin":
 					phonebook.exportToBin(phonebookFile);
 					break;
-				case ".xml":
+				case "xml":
 					phonebook.exportToXml(phonebookFile);
 					break;
 				default:
 					System.out.println("Extension not valid.");
 					break;
 			}
-		} while (!fileExtension.equals(".txt") && !fileExtension.equals(".bin") && !fileExtension.equals(".xml"));
+		} while (!fileExtension.equals("txt") && !fileExtension.equals("bin") && !fileExtension.equals("xml"));
 	}
 	
 	private static void importPhonebookMenu() {
