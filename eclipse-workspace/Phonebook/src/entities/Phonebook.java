@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -26,16 +25,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
-
 import util.SAXHandler;
 
 public class Phonebook implements Serializable {
 	
 	private static final long serialVersionUID = -8424820299914478473L;
 	private ArrayList<Contact> contacts;
-	private static String lb = "\n"; // LineBreak for text files
+	public static String lb = "\n"; // LineBreak for text files
 
 	// START Constructors
 	public Phonebook() {
@@ -300,7 +296,8 @@ public class Phonebook implements Serializable {
 	public void exportToBin(File phonebookFile) {
 		/**
 		 *	0 = Field is null
-		 *	Any other number = The number of elements in the ArrayList
+		 *	1 = Field exists
+		 *	Any other number = The number of elements in an ArrayList
 		 */
 		FileOutputStream fos;
 		DataOutputStream dos = null;
@@ -564,26 +561,4 @@ public class Phonebook implements Serializable {
 		}
 	}
 	// END XML Export/Import
-	
-	// START XML XStream Export/Import
-	public void exportToXmlXstream(File phonebookFile) {
-		XStream xstream = new XStream(new DomDriver());
-		
-		try {
-			xstream.alias("contact", Contact.class);
-			xstream.toXML(this.getContacts().get(0), new FileOutputStream(phonebookFile));
-			
-			Contact newContact = (Contact) xstream.fromXML(new FileInputStream(phonebookFile));
-			System.out.println(newContact.toString());
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	public void importFromXmlXstream(File phonebookFile) {
-		
-	}
-	// END XML XStream Export/Import
 }

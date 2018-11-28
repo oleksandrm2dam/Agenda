@@ -46,41 +46,32 @@ public class SAXHandler extends DefaultHandler {
 				phonebook.getContacts().add(contact);
 				break;
 			case "name":
-				if(value != null)
-					contact.setName(value);
-				value = null;
+				contact.setName(value);
 				break;
 			case "lastName":
-				if(value != null)
-					contact.setLastName(value);
-				value = null; // Value is set to NULL in case the next element doesn't have a value
+				contact.setLastName(value);
 				break;
 			case "alias":
-				if(value != null)
-					contact.setAlias(value);
-				value = null; 
+				contact.setAlias(value);
 				break;
 			case "email":
-				if(value != null)
+				if(value != null) {
 					contact.getEmail().add(value);
-				value = null;
+				}	
 				break;
 			case "address":
-				if(value != null)
-					contact.setAddress(value);
-				value = null;
+				contact.setAddress(value);
 				break;
 			case "landlinePhoneNumber":
-				if(value != null)
-					contact.setLandlinePhoneNumber(value);
-				value = null;
+				contact.setLandlinePhoneNumber(value);
 				break;
 			case "phoneNumber":
-				if(value != null)
+				if(value != null) {
 					contact.getPhoneNumber().add(value);
-				value = null;
+				}	
 				break;
 		}
+		value = null; // Value is set to NULL in case the next element doesn't have a value
 	}
 	
 }

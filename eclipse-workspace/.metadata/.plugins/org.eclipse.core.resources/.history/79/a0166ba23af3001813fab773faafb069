@@ -1,0 +1,12 @@
+package util;
+
+public class UserInputChecker {
+	
+	public static String userInput() {
+		
+	}
+	
+	private static String filterInput() {
+		
+	}
+}

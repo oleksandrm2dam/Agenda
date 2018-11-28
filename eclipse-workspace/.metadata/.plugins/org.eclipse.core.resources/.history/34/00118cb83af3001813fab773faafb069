@@ -1,0 +1,16 @@
+package util;
+
+import java.util.Scanner;
+
+public class UserInputChecker {
+	
+	public static String userInput(Scanner scanner) {
+		return filterInput(scanner.nextLine());
+	}
+	
+	private static String filterInput(String input) {
+		String output = "";
+		
+		return output;
+	}
+}
