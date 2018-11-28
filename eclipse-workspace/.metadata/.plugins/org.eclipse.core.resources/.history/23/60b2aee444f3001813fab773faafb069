@@ -1,0 +1,27 @@
+package util;
+
+import java.util.Scanner;
+
+import entities.Phonebook;
+
+public class UserInputChecker {
+	
+	public static String getUserInput(Scanner scanner) {
+		return filterInput(scanner.nextLine());
+	}
+	
+	private static String filterInput(String input) {
+		String output = "";
+		
+		for(int i = 0; i < input.length(); ++i) {
+			
+			if(Character.toString(input.charAt(i)).equals(Phonebook.lb)) {
+				System.out.println("Encontrado caracter prohibido!");
+			} else {
+				output += input.charAt(i);
+			}
+		}
+		
+		return output;
+	}
+}
