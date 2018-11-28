@@ -1,0 +1,23 @@
+package main;
+
+import java.io.File;
+
+import entities.Phonebook;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// File where the program's main phonebook will be saved
+		String executionPath = System.getProperty("user.dir").replace("\\", "/");
+		File phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
+		
+		Phonebook phonebook = new Phonebook();
+		if(phonebookDefaultFile.exists()) {
+			phonebook.importFromBin(phonebookDefaultFile);
+		}
+		
+		PBInterface iface = new PBInterface(phonebook, phonebookDefaultFile);
+		iface.start();
+	}
+
+}

@@ -1,0 +1,16 @@
+package main;
+
+import java.io.File;
+
+import entities.Phonebook;
+
+public class Interface {
+	
+	private Phonebook phonebook;
+	private File phonebookDefaultFile;
+	
+	public Interface(Phonebook phonebook, File phonebookDefaultFile) {
+		
+	}
+	
+}

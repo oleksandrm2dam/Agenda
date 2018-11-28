@@ -1,0 +1,20 @@
+package main;
+
+import java.io.File;
+
+import entities.Phonebook;
+
+public class Main {
+
+	public static void main(String[] args) {
+		String executionPath = System.getProperty("user.dir").replace("\\", "/");
+		File phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
+		
+		Phonebook phonebook = new Phonebook();
+		phonebook.importFromBin(phonebookDefaultFile);
+		
+		PBInterface iface = new PBInterface(phonebook, phonebookDefaultFile);
+		iface.start();
+	}
+
+}

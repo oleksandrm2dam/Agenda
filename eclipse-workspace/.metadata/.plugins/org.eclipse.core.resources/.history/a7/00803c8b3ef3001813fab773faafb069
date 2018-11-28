@@ -1,0 +1,9 @@
+package main;
+
+import entities.Phonebook;
+
+public class Interface {
+	
+	Phonebook phonebook;
+	
+}

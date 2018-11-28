@@ -1,0 +1,10 @@
+package main;
+
+import entities.Phonebook;
+
+public class Interface {
+	
+	private Phonebook phonebook;
+	private File phonebookDefaultFile;
+	
+}
