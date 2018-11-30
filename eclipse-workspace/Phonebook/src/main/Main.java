@@ -8,8 +8,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		// File where the program's main phonebook will be saved
-		String executionPath = System.getProperty("user.dir").replace("\\", "/");
-		File phonebookDefaultFile = new File(executionPath + "/phonebook.bin");
+		File phonebookDefaultFile = new File("phonebook.bin");
 		
 		// Create a phonebook and load to it from disk if there is a previous one
 		Phonebook phonebook = new Phonebook();

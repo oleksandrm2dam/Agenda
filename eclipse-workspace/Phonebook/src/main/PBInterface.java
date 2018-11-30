@@ -42,12 +42,12 @@ public class PBInterface {
 					// Before exiting, the phonebook gets saved to disk
 					phonebook.exportToBin(phonebookDefaultFile);
 					System.out.println("GOODBYE!");
+					scanner.close();
 					break;
 				default:
 					break;
 			}
 		} while (!mainMenuAnsw.equals("5"));
-		scanner.close();
 	}
 	
 	private void mainMenu() {
@@ -84,12 +84,15 @@ public class PBInterface {
 		System.out.println("Alias: ");
 		alias = scanner.nextLine();
 		
-		String another;
+		String another = "n";
 		do {
 			System.out.println("Email: ");
-			email.add(scanner.nextLine());
-			System.out.println("Add another email? (Y/n): ");
-			another = scanner.nextLine();
+			String newEmail = scanner.nextLine();
+			if(!newEmail.equals("")) {
+				email.add(scanner.nextLine());
+				System.out.println("Add another email? (Y/n): ");
+				another = scanner.nextLine();
+			}
 		} while (!another.equals("n") && !another.equals("N"));
 		
 		System.out.println("Address: ");
@@ -98,11 +101,15 @@ public class PBInterface {
 		System.out.println("Landline phone number: ");
 		landlinePhoneNumber = scanner.nextLine();
 		
+		another = "n";
 		do {
 			System.out.println("Mobile phone number: ");
-			phoneNumber.add(scanner.nextLine());
-			System.out.println("Add another mobile phone number? (Y/n): ");
-			another = scanner.nextLine();
+			String newMobile = scanner.nextLine();
+			if(!newMobile.equals("")) {
+				phoneNumber.add(scanner.nextLine());
+				System.out.println("Add another mobile phone number? (Y/n): ");
+				another = scanner.nextLine();
+			}
 		} while (!another.equals("n") && !another.equals("N"));
 		// END User input
 		
@@ -260,9 +267,11 @@ public class PBInterface {
 					int numEmails = contact.getEmail().size();
 					if(numEmails == 0) {
 						// If there are no email addresses
-						contact.setEmail(new ArrayList<String>());
 						System.out.println("New email: ");
-						contact.getEmail().add(scanner.nextLine());
+						String newEmail = scanner.nextLine();
+						if(!newEmail.equals("")) {
+							contact.getEmail().add(newEmail);
+						}
 					} else {
 						// If there are one or more email addresses
 						System.out.println("Choose the email to modify: ");
@@ -278,11 +287,19 @@ public class PBInterface {
 								if(selectedEmailIndex == numEmails) {
 									// Add new email
 									System.out.println("New email: ");
-									contact.getEmail().add(scanner.nextLine());
+									String newEmail = scanner.nextLine();
+									if(!newEmail.equals("")) {
+										contact.getEmail().add(newEmail);
+									}
 								} else {
 									// Edit the selected email
 									System.out.println("New email: ");
-									contact.getEmail().set(selectedEmailIndex, scanner.nextLine());
+									String newEmail = scanner.nextLine();
+									if(newEmail.equals("")) {
+										contact.getEmail().remove(selectedEmailIndex);
+									} else {
+										contact.getEmail().set(selectedEmailIndex, newEmail);
+									}
 								}
 							}
 						} catch (NumberFormatException e) {
@@ -303,9 +320,11 @@ public class PBInterface {
 					int numPhones = contact.getPhoneNumber().size();
 					if(numPhones == 0) {
 						// If there are no phone numbers
-						contact.setPhoneNumber(new ArrayList<String>());
 						System.out.println("New mobile phone number: ");
-						contact.getPhoneNumber().add(scanner.nextLine());
+						String newMobile = scanner.nextLine();
+						if(!newMobile.equals("")) {
+							contact.getPhoneNumber().add(newMobile);
+						}
 					} else {
 						// If there are one or more mobile phone numbers
 						System.out.println("Choose the mobile phone number to modify: ");
@@ -321,11 +340,19 @@ public class PBInterface {
 								if(selectedPhoneIndex == numPhones) {
 									// Add new phone number
 									System.out.println("New mobile phone number: ");
-									contact.getPhoneNumber().add(scanner.nextLine());
+									String newMobile = scanner.nextLine();
+									if(!newMobile.equals("")) {
+										contact.getPhoneNumber().add(newMobile);
+									}
 								} else {
 									// Edit the selected phone number
 									System.out.println("New mobile phone number: ");
-									contact.getPhoneNumber().set(selectedPhoneIndex, scanner.nextLine());
+									String newMobile = scanner.nextLine();
+									if(newMobile.equals("")) {
+										contact.getPhoneNumber().remove(selectedPhoneIndex);
+									} else {
+										contact.getPhoneNumber().set(selectedPhoneIndex, newMobile);
+									}
 								}
 							}
 						} catch (NumberFormatException e) {
@@ -348,10 +375,9 @@ public class PBInterface {
 	private void exportPhonebookMenu() {
 		System.out.println("Folder: ");
 		String dir = scanner.nextLine();
-		
-		
 		String fileName;
 		String fileExtension = "";
+		String lowerCaseFileExtension;
 		do {
 			System.out.println("File name (can be .txt, .bin, .xml): ");
 			fileName = scanner.nextLine();
@@ -371,8 +397,9 @@ public class PBInterface {
 			if(lastDot > 0) {
 				fileExtension = fileName.substring(lastDot + 1);
 			}
-						
-			switch(fileExtension) {
+			
+			lowerCaseFileExtension = fileExtension.toLowerCase();
+			switch(lowerCaseFileExtension) {
 				case "txt":
 					phonebook.exportToTxt(phonebookFile);
 					break;
@@ -386,7 +413,7 @@ public class PBInterface {
 					System.out.println("Extension not valid.");
 					break;
 			}
-		} while (!fileExtension.equals("txt") && !fileExtension.equals("bin") && !fileExtension.equals("xml"));
+		} while (!lowerCaseFileExtension.equals("txt") && !lowerCaseFileExtension.equals("bin") && !lowerCaseFileExtension.equals("xml"));
 	}
 	
 	private void importPhonebookMenu() {
@@ -396,6 +423,7 @@ public class PBInterface {
 		
 		String fileName;
 		String fileExtension = "";
+		String lowerCaseFileExtension;
 		do {
 			System.out.println("File name (with extension): ");
 			fileName = scanner.nextLine();
@@ -413,29 +441,26 @@ public class PBInterface {
 				return;
 			}
 			
-			switch(fileExtension) {
+			lowerCaseFileExtension = fileExtension.toLowerCase();
+			switch(lowerCaseFileExtension) {
 				case "txt":
 					phonebook.importFromTxt(phonebookFile);
-					// Save the phonebook to disk
-					phonebook.exportToBin(phonebookDefaultFile);
 					break;
 				case "bin":
 					phonebook.importFromBin(phonebookFile);
-					// Save the phonebook to disk
-					phonebook.exportToBin(phonebookDefaultFile);
 					break;
 				case "xml":
 					phonebook.importFromXml(phonebookFile);
-					// Save the phonebook to disk
-					phonebook.exportToBin(phonebookDefaultFile);
 					break;
 				default:
 					System.out.println("Extension not valid.");
 					break;
 			}
 			
-		} while (!fileExtension.equals("txt") && !fileExtension.equals("bin") && !fileExtension.equals("xml"));
+		} while (!lowerCaseFileExtension.equals("txt") && !lowerCaseFileExtension.equals("bin") && !lowerCaseFileExtension.equals("xml"));
 		System.out.println("Succesfully imported phonebook.");
+		// Save the phonebook to disk
+		phonebook.exportToBin(phonebookDefaultFile);
 	}
 	
 }

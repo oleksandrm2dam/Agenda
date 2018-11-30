@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,9 +26,8 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import util.SAXHandler;
 
-public class Phonebook implements Serializable {
+public class Phonebook {
 	
-	private static final long serialVersionUID = -8424820299914478473L;
 	private ArrayList<Contact> contacts;
 	public static String lb = "\n"; // LineBreak for text files
 
@@ -62,33 +60,28 @@ public class Phonebook implements Serializable {
 	public ArrayList<Contact> searchByName(String wantedName) {
 		ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 		wantedName = wantedName.toLowerCase();
-		
 		for(Contact currentContact : contacts) {
 			if(currentContact.getName().toLowerCase().equals(wantedName)) {
 				foundContacts.add(currentContact);
 			}
 		}
-		
 		return foundContacts;
 	}
 	
 	public ArrayList<Contact> searchByLastName(String wantedLastName) {
 		ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 		wantedLastName = wantedLastName.toLowerCase();
-		
 		for(Contact currentContact : contacts) {
 			if(currentContact.getLastName().toLowerCase().equals(wantedLastName)) {
 				foundContacts.add(currentContact);
 			}
 		}
-		
 		return foundContacts;
 	}
 	
 	public ArrayList<Contact> searchByAlias(String wantedAlias) {
 		ArrayList<Contact> foundContacts = new ArrayList<Contact>();
 		wantedAlias = wantedAlias.toLowerCase();
-		
 		for(Contact currentContact : contacts) {
 			if(currentContact.getAlias() != null) {
 				if(currentContact.getAlias().toLowerCase().equals(wantedAlias)) {
@@ -96,7 +89,6 @@ public class Phonebook implements Serializable {
 				}
 			}
 		}
-		
 		return foundContacts;
 	}
 	// END Search methods

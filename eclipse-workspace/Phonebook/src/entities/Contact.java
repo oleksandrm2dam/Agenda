@@ -1,11 +1,9 @@
 package entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Contact implements Serializable {
+public class Contact {
 	
-	private static final long serialVersionUID = 5040684078250903375L;
 	private String name;					// Required
 	private String lastName;				// Required
 	private String alias;					// Can be empty
